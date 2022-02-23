@@ -17,8 +17,35 @@ function select(el, all = true) {
   }
 }
 
+
+
+function ADR(address) {
+  let checksumAdr;
+  try {
+    checksumAdr = ethers.utils.getAddress(address);
+  } catch (error) {
+    alert('Wrong Format Address: [' + address + ']');
+
+    return '';
+  }
+  return checksumAdr;
+}
+
+
+let currentAccount;
+async function ahandleAccountsChanged(accounts) {
+  if (accounts.length == 0) {
+    displayText("connectResult", 'Please Connect Metamask');
+    return;
+  }
+
+  currentAccount = ADR(accounts[0]);
+
+  return currentAccount;
+}
+
 async function afconnect() {
-  accounts = await ethereum
+  let accounts = await ethereum
     .request({ method: 'eth_requestAccounts' }); // eth_requestAccounts
 
   currentAccount = await ahandleAccountsChanged(accounts);
