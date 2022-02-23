@@ -1,6 +1,6 @@
 BNBDIV = 10**18;
 
-function round(value, n) {
+function round(value, n=0) {
   return value.toFixed(n);
 }
 function BNB(value, n=4) {
