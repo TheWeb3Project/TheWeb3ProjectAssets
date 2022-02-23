@@ -26,7 +26,12 @@ function copyValue(value) {
   navigator.clipboard.writeText(value);
 }
 
-
+function displayText(el, text) {
+  let els = select(el);
+  for (var idx = 0; idx < els.length; idx++) {
+    els[idx].innerHTML = text;
+  }
+}
 
 function shortAdrDisplay(adr) {
   let shortAdrStr = adr.slice(0, 6) + '..' + adr.slice(-4);
@@ -45,14 +50,14 @@ function ADR(address) {
   return checksumAdr;
 }
 
-function displayAccountInformation() {
+async function displayAccountInformation() {
   let shortAdrStr = shortAdrDisplay(currentAccount);
   
-  let els = select('.connect-wallet');
-  for (var idx = 0; idx < els.length; idx++) {
-    els[idx].innerHTML = shortAdrStr;
-  }
-  
+  displayText('.connect-wallet', shortAdrStr);
+	
+  let balance = await provider.getBalance(currentAccount);
+  displayText('.balance-number', BNB(balance, 4));
+	
   return;
 }
 
@@ -64,7 +69,7 @@ async function ahandleAccountsChanged(accounts) {
   }
 
   currentAccount = ADR(accounts[0]);
-  displayAccountInformation();
+  await displayAccountInformation();
   
   return currentAccount;
 }
