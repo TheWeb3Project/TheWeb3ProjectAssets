@@ -1,4 +1,4 @@
-BNBDIV = 10**18;
+const BNBDIV = 10**18;
 
 function round(value, n=0) {
   return value.toFixed(n);
@@ -50,6 +50,7 @@ function ADR(address) {
   return checksumAdr;
 }
 
+let currentAccount;
 async function displayAccountInformation() {
   let shortAdrStr = shortAdrDisplay(currentAccount);
   
@@ -61,7 +62,6 @@ async function displayAccountInformation() {
   return;
 }
 
-let currentAccount;
 async function ahandleAccountsChanged(accounts) {
   if (accounts.length == 0) {
     displayText("connectResult", 'Please Connect Metamask');
