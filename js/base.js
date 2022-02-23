@@ -8,6 +8,11 @@ function BNB(value, n=4) {
   return round(value / BNBDIV, n);
 }
 
+function WRAP(v) {
+	return '[' + v + ']';
+}
+
+
 function select(el, all = true) {
   el = el.trim()
   if (all) {
@@ -17,7 +22,16 @@ function select(el, all = true) {
   }
 }
 
+function copyValue(value) {
+  navigator.clipboard.writeText(value);
+}
 
+
+
+function shortAdrDisplay(adr) {
+  let shortAdrStr = adr.slice(0, 6) + '..' + adr.slice(-4);
+  return shortAdrStr;
+}
 
 function ADR(address) {
   let checksumAdr;
@@ -31,6 +45,16 @@ function ADR(address) {
   return checksumAdr;
 }
 
+function displayAccountInformation() {
+  let shortAdrStr = shortAdrDisplay(currentAccount);
+  
+  let els = select('.connect-wallet');
+  for (var idx = 0; idx < els.length; idx++) {
+    els[idx].innerHTML = shortAdrStr;
+  }
+  
+  return;
+}
 
 let currentAccount;
 async function ahandleAccountsChanged(accounts) {
@@ -40,7 +64,8 @@ async function ahandleAccountsChanged(accounts) {
   }
 
   currentAccount = ADR(accounts[0]);
-
+  displayAccountInformation();
+  
   return currentAccount;
 }
 
