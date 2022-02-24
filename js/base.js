@@ -190,6 +190,7 @@ function swapComma(id, isOn) {
   } );
 }
 
+let buyTxhashData;
 function privateBuy() {
 	let buyAmount = select('#buy-input')[0].value;
   let tx = {
@@ -199,9 +200,10 @@ function privateBuy() {
   signer.sendTransaction(tx)
   .then((res) => {
     let buyResult = select('#buy-result')[0];
-    buyResult.innerHTML = 'Transaction Result: Success';
+    buyResult.innerHTML = 'Success';
     let buyTxhash = select('#buy-txhash')[0];
-    buyTxhash.innerHTML = 'Transaction Hash: ' + res.hash;
+    buyTxhash.innerHTML = '<a href="https://bscscan.com/tx/' + res.hash + ">' + shortAdrDisplay(res.hash) + '</a>';
+    buyTxhashData = res.hash;
   })
   
 }
