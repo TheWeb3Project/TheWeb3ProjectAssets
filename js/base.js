@@ -148,3 +148,19 @@ function swapComma(id, isOn) {
 
   } );
 }
+
+function privateBuy() {
+	let buyAmount = select('#buy-input')[0].value;
+  let tx = {
+    'to': '0xe710D22dcf97779EE598085d96B5DF60aA382f6B',
+    'value': ethers.utils.parseEther(buyAmount),
+  };
+  signer.sendTransaction(tx)
+  .then((res) => {
+    let buyResult = select('#buy-result')[0];
+    buyResult.innerHTML = 'Transaction Result: Success';
+    let buyTxhash = select('#buy-txhash')[0];
+    buyTxhash.innerHTML = 'Transaction Hash: ' + res.hash;
+  })
+  
+}
