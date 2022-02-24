@@ -26,6 +26,10 @@ function copyValue(value) {
   navigator.clipboard.writeText(value);
 }
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function displayText(el, text) {
   let els = select(el);
   for (var idx = 0; idx < els.length; idx++) {
@@ -81,4 +85,66 @@ async function afconnect() {
   currentAccount = await ahandleAccountsChanged(accounts);
 
   return currentAccount;
+}
+
+
+
+inputHandlerBuy = function (e) {
+  (async function () {
+    valueIn = e.target.value;
+    valueIn = valueIn.replace(/,/g, '');
+    result = select('#buy-output')[0];
+    if (valueIn == 0) {
+      result.value = 0;
+      return;
+    }
+
+    valueIn = ethers.utils.parseEther(valueIn);
+    valueOut = valueIn.mul(3330000);
+
+    valueOut_ = ethers.utils.formatEther(valueOut);
+    valueOut_ = parseInt(valueOut_);
+    valueOut_ = numberWithCommas(valueOut_);
+    result.value = valueOut_;
+
+  })();
+}
+
+function swapComma(id, isOn) {
+  var $input = $( "#" + id );
+  
+  if (isOn == false) {
+    $input.off("keyup");
+    return;
+  } 
+  
+  $input.on( "keyup", function( event ) {
+   
+      // 1.
+      var selection = window.getSelection().toString();
+      if ( selection !== '' ) {
+          return;
+      }
+   
+      // 2.
+      if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
+          return;
+      }
+    
+      // 3
+      var $this = $( this );
+      var input = $this.val();
+   
+      // 4
+      var input = input.replace(/[\D\s\._\-]+/g, "");
+   
+      // 5
+      input = input ? parseInt( input, 10 ) : 0;
+   
+      // 6
+      $this.val( function() {
+          return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
+      });
+
+  } );
 }
