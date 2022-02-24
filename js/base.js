@@ -97,7 +97,7 @@ function displayAccountInformation() {
 	
   provider.getBalance(currentAccount)
   .then((res) => {
-    displayText('.balance-number', BNB(res, 4));
+    displayText('#balance-number', BNB(res, 4));
   });
 
   return;
