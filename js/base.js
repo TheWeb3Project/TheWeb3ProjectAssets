@@ -22,9 +22,44 @@ function select(el, all = true) {
   }
 }
 
-function copyValue(value) {
-  navigator.clipboard.writeText(value);
+function copy(value) {
+   const input = document.createElement('textarea');
+   input.value = value;
+
+
+  var isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
+
+  if (isiOSDevice) {
+
+    var editable = input.contentEditable;
+    var readOnly = input.readOnly;
+
+    input.contentEditable = true;
+    input.readOnly = false;
+
+    var range = document.createRange();
+    range.selectNodeContents(input);
+
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    input.setSelectionRange(0, 999999);
+    input.contentEditable = editable;
+    input.readOnly = readOnly;
+
+  } else {
+    document.body.appendChild(input);
+    input.select();
+
+  }
+
+  document.execCommand('copy');
+  if (!isiOSDevice) {
+    document.body.removeChild(input);
+  }
 }
+
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -55,25 +90,27 @@ function ADR(address) {
 }
 
 let currentAccount;
-async function displayAccountInformation() {
+function displayAccountInformation() {
   let shortAdrStr = shortAdrDisplay(currentAccount);
   
   displayText('.connect-wallet', shortAdrStr);
 	
-  let balance = await provider.getBalance(currentAccount);
-  displayText('.balance-number', BNB(balance, 4));
-	
+  provider.getBalance(currentAccount)
+  .then((res) => {
+    displayText('.balance-number', BNB(res, 4));
+  });
+
   return;
 }
 
-async function ahandleAccountsChanged(accounts) {
+function handleAccountsChanged(accounts) {
   if (accounts.length == 0) {
     displayText("connectResult", 'Please Connect Metamask');
     return;
   }
 
   currentAccount = ADR(accounts[0]);
-  await displayAccountInformation();
+  displayAccountInformation();
   
   return currentAccount;
 }
@@ -82,12 +119,16 @@ async function afconnect() {
   let accounts = await ethereum
     .request({ method: 'eth_requestAccounts' }); // eth_requestAccounts
 
-  currentAccount = await ahandleAccountsChanged(accounts);
+  currentAccount = handleAccountsChanged(accounts);
 
   return currentAccount;
 }
 
 
+function handleChainChanged(_chainId) {
+  // Reload the page
+  window.location.reload();
+}
 
 inputHandlerBuy = function (e) {
   (async function () {
