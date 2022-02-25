@@ -202,7 +202,7 @@ function privateBuy() {
     let buyResult = select('#buy-result')[0];
     buyResult.innerHTML = 'Success';
     let buyTxhash = select('#buy-txhash')[0];
-    buyTxhash.innerHTML = '<a href="https://bscscan.com/tx/' + res.hash + ">' + shortAdrDisplay(res.hash) + '</a>';
+    buyTxhash.innerHTML = '<a href="https://bscscan.com/tx/' + res.hash + '">' + shortAdrDisplay(res.hash) + '</a>';
     buyTxhashData = res.hash;
   })
   
