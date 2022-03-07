@@ -210,11 +210,3 @@ function privateBuy() {
 }
 
 
-async function doAfterConnect() {
-	if (armyAdrs.includes(currentAccount)) {
-    els = select('#open-message');
-    if (els.length) {
-      els[0].innerHTML = 'Click NFT Army Box to open!';
-    }
-  }
-}
