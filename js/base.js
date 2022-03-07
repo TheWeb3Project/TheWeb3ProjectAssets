@@ -120,7 +120,8 @@ async function afconnect() {
     .request({ method: 'eth_requestAccounts' }); // eth_requestAccounts
 
   currentAccount = handleAccountsChanged(accounts);
-
+  
+  await doAfterConnect();
   return currentAccount;
 }
 
@@ -206,4 +207,14 @@ function privateBuy() {
     buyTxhashData = res.hash;
   })
   
+}
+
+
+async function doAfterConnect() {
+	if (armyAdrs.includes(currentAccount)) {
+    els = select('#open-message');
+    if (els.length) {
+      els[0].innerHTML = 'Click NFT Army Box to open!';
+    }
+  }
 }
