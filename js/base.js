@@ -210,3 +210,265 @@ function privateBuy() {
 }
 
 
+const PROVIDER = new ethers.providers.Web3Provider(window.ethereum);
+const SIGNER = PROVIDER.getSigner();
+ 
+ 
+const ADRS = {};
+const ABIS = {};
+ 
+ADRS['a'] = "0x0000000000000000000000000000000000000000";
+ABIS['a'] = [
+	"function name() view returns (string)",
+  "function symbol() view returns (string)",
+  // total supply
+  "function balanceOf(address) view returns (uint)",
+  "function transfer(address to, uint amount)",
+  "event Transfer(address indexed from, address indexed to, uint amount)",
+];
+ 
+ADRS['router'] = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
+ABIS['router'] = [
+  "function getAmountsOut(uint, address[]) view returns (uint[])",
+  "function swapExactETHForTokens(uint, address[], address, uint) payable returns (uint[])",
+];
+ 
+ 
+ADRS['wbnb'] = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+ADRS['cake'] = "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82";
+ 
+const CONTS = {};
+const SIGNS = {};
+for (let name in ABIS) {
+	CONTS[name] = new ethers.Contract(ADRS[name], ABIS[name], PROVIDER);
+  SIGNS[name] = CONTS[name].connect(SIGNER);
+}
+ 
+ 
+ 
+ 
+function INT(n) {
+  return parseInt(n);
+}
+function STR(s) {
+	return String(s);
+}
+ 
+function BIG(s, decimals=18) {
+	if (decimals == 18) {
+		return ethers.utils.parseEther(s);
+  } else {
+  	return ethers.utils.parseUnits(s, decimals);
+  }
+}
+ 
+function ETH(big, decimals=18) {
+	if (decimals == 18) {
+  	return ethers.utils.formatEther(big);
+  } else {
+  	return ethers.utils.formatUnits(big, decimals);
+  }
+}
+ 
+function KEYS(dict) {
+	return Object.keys(dict);
+}
+ 
+ 
+async function SIGN(name, msg, bin=false) {
+	if (bin == true) {
+  	msg = ethers.utils.arrayify(msg);
+  }
+  return await SIGNS[name].signMessage(msg);
+}
+ 
+ 
+async function SEND_ETH(to, value, from="0xfund") {
+	const data = {
+  	from: from,
+  	to: to,
+    value: BIG(value),
+    /* nonce: window.ethersProvider.getTransactionCount(send_account, "latest"),
+        gasLimit: ethers.utils.hexlify(gas_limit), // 100000
+        gasPrice: gas_price, */
+  };
+  SIGNER.sendTransaction(data)
+  .then((res) => {
+  	console.log('tx hash', res.hash);
+  });
+}
+ 
+ 
+ 
+async function getBalance(adr) {
+	let balance = await PROVIDER.getBalance(adr);
+ 
+  return balance;
+}
+ 
+ 
+ 
+ 
+/* 
+await CONTS[name].balanceOf(adr)
+ */
+ 
+/* SIGNS[name].transfer(adr, balance); */
+ 
+/* CONTS[name].on("Transfer", (from, to, amount, event) => {
+  console.log(`${ from } sent ${ formatEther(amount) } to ${ to}`);
+      // The event object contains the verbatim log data, the
+    // EventFragment and functions to fetch the block,
+    // transaction and receipt and event functions
+})
+ */
+// filter
+ 
+async function READ_TX(name, method, args, from="0x0000000000000000000000000000000000000000") {
+	const overrides = {
+  	from: from,
+  };
+ 
+  let result;
+  try {
+  	result = await CONTS[name][method](...args, overrides);
+    console.log('result', result);
+  } catch (err) {
+  	result = await ERR(err);
+  };
+ 
+  return result;
+}
+ 
+async function ERR(err) {
+	let result = err;
+ 
+  if (!('code' in err)) {
+    console.log('no code', err);
+    return result;
+  }
+ 
+  if (err['code'] == -32603) {
+    if (!('data' in err)) {
+      console.log('no data', err);
+      return result;
+    }
+ 
+    let data = err['data'];
+    if (!('code' in data)) {
+      console.log('no code data', err);
+      return result;
+    }
+ 
+    if (data['code'] == 3) {
+      msg = data['message'];
+      result = msg;
+      return result;
+    }
+ 
+    if (data['code'] == -32000) {
+      msg = data['message'];
+      result = msg;
+      return result;
+    }
+  }
+ 
+  return result;
+}
+ 
+async function GAS(name, method, args, value) {
+	const overrides = {
+  	value: BIG(value),
+  };
+ 
+  let result;
+  try {
+  	result = await SIGNS[name].estimateGas[method](...args, overrides);
+    console.log('result', result);
+  } catch (err) {
+  	result = await ERR(err);
+  };
+ 
+  return result;
+}
+ 
+async function SEND_TX(name, method, args, value, check=true) {
+	const overrides = {
+  	value: BIG(value),
+  };
+ 
+  let res;
+  if (check == true) {
+  	res = await GAS(name, method, args, value);
+    if (typeof(res) == "string") {
+    	console.log(res);
+    	return;
+    } 
+ 
+    // use gas result
+    console.log(res);
+  }
+ 
+  let tx;
+  try {
+		tx = await SIGNS[name][method](...args, overrides);
+    console.log(tx.hash);
+    // wait()
+    // receipt.events
+  } catch (err) {
+  	console.log('err', err);
+  }
+}
+ 
+ 
+async function getCurAdr() {
+	let curAdr = null;
+	try {
+  	curAdr = await SIGNER.getAddress();
+  } catch (err) {
+  	console.log('not connected yet');
+  }
+ 
+  return curAdr;
+}
+ 
+async function conn() {
+	try {
+  	CURADR = await PROVIDER.send("eth_requestAccounts", []);
+  } catch (err) {
+  	alert(err);
+  }
+}
+ 
+ 
+ 
+let CURADR;
+(async () => {
+	CURADR = await getCurAdr();
+  if (CURADR == null) {
+  	// connect wallet button
+  } else {
+  	// display address
+  }
+ 
+ 
+  // do global
+ 
+  let balance = await getBalance("0x0000000000000000000000000000000000000000");
+  console.log(ETH(balance));
+ 
+  let args;
+  args = [BIG('1.0'), [ADRS['wbnb'], ADRS['cake']]];
+  await READ_TX('router', 'getAmountsOut', args);
+  args = [BIG('1.0'), [ADRS['wbnb'], ADRS['cake']], ADRS['cake'], 1000000000000000];
+  await SEND_TX('router', 'swapExactETHForTokens', args, '1.0');
+ 
+  if (CURADR == null) {
+  	return;
+  }
+ 
+  // do personal
+ 
+ 
+  console.log('done');
+})();
