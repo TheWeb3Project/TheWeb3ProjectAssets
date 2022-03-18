@@ -467,7 +467,7 @@ async function SEND_TX(name, method, args, value, check=true) {
 
 
 let buyTxhashData;
-function privateBuy() {
+async function privateBuy() {
 	let buyAmount = select('#buy-input')[0].value;
   let { res, data } = await SEND_ETH(CURADR, ADRS['fund'], buyAmount);
   if (res == true) {
