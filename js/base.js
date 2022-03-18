@@ -264,7 +264,7 @@ async function getBalance(adr) {
 async function getPrice(adr) {
   adr = ADRS['busd'];
   let pair = await CONTS['factory'].getPair(adr, ADRS['wbnb']);
-  cont = new ethers.Contract(pair, ABIS['pair'], PROVIDER);
+  let cont = new ethers.Contract(pair, ABIS['pair'], PROVIDER);
   let r = await cont.getReserves();
   let t0 = await cont.token0();
 
