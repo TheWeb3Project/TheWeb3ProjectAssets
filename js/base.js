@@ -191,7 +191,7 @@ function swapComma(id, isOn) {
 }
 
 
-inputHandlerBuy = function (e) {
+const inputHandlerBuy = function (e) {
   (async function () {
     valueIn = e.target.value;
     valueIn = valueIn.replace(/,/g, '');
