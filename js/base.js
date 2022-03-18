@@ -359,10 +359,10 @@ async function SEND_ETH(from=ADRS["fund"], to=ADRS["fund"], value='0.0') {
   try {
   	let result = await SIGNER.sendTransaction(data);
     console.log('result', result);
-    return { false, result };
+    return [ false, result ];
   } catch (err) {
   	err = await ERR(err);
-    return { true, err };
+    return [ true, err ];
   }
 }
  
@@ -374,10 +374,10 @@ async function READ_TX(name, method, args, from="0xe7F0704b198585B8777abe859C312
   try {
   	let result = await CONTS[name][method](...args, overrides);
     console.log('result', result);
-    return { false, result };
+    return [ false, result ];
   } catch (err) {
   	err = await ERR(err);
-    return { true, err };
+    return [ true, err ];
   }
  
 }
@@ -385,37 +385,37 @@ async function READ_TX(name, method, args, from="0xe7F0704b198585B8777abe859C312
 async function ERR(err) { 
   if (!('code' in err)) {
     console.log('no code', err);
-    return { true, err };
+    return [ true, err ];
   }
  
   if (err['code'] == -32603) {
     if (!('data' in err)) {
       console.log('no data', err);
-      return { true, err };
+      return [ true, err ];
     }
  
     let data = err['data'];
     if (!('code' in data)) {
       console.log('no code data', err);
-      return { true, err };
+      return [ true, err ];
     }
  
     if (data['code'] == 3) {
       msg = data['message'];
-      return { false, msg };
+      return [ false, msg ];
     }
  
     if (data['code'] == -32000) {
       msg = data['message'];
-      return { false, msg };
+      return [ false, msg ];
     }
     
     console.log('not def', err);
-    return { true, err };
+    return [ true, err ];
   }
   
   console.log('no code not def', err);
-  return { false, err };
+  return [ false, err ];
 }
  
 async function GAS(name, method, args, value) {
@@ -426,10 +426,10 @@ async function GAS(name, method, args, value) {
   try {
   	let result = await SIGNS[name].estimateGas[method](...args, overrides);
     console.log('result', result);
-    return { false, result };
+    return [ false, result ];
   } catch (err) {
   	err = await ERR(err);
-    return { true, err };
+    return [ true, err ];
   }
 }
  
@@ -442,7 +442,7 @@ async function SEND_TX(name, method, args, value, check=true) {
   	let { res, data } = await GAS(name, method, args, value);
     if (res == true) {
     	console.log(res);
-    	return { true, data };
+    	return [ true, data ];
     } 
  
     // use gas result
@@ -450,15 +450,15 @@ async function SEND_TX(name, method, args, value, check=true) {
   }
 
   try {
-		let result = await SIGNS[name][method](...args, overrides);
+    let result = await SIGNS[name][method](...args, overrides);
     console.log('result', result);
-    return { false, result };
+    return [ false, result ];
     /* console.log(tx.hash); */
     // wait()
     // receipt.events
   } catch (err) {
   	err = await ERR(err);
-    return { true, err };
+    return [ true, err ];
   }
 }
 
@@ -472,7 +472,7 @@ function privateBuy() {
   let { res, data } = await SEND_ETH(CURADR, ADRS['fund'], buyAmount);
   if (res == true) {
   	// err
-    return { true, data };
+    return [ true, data ];
   }
   
   let buyResult = select('#buy-result')[0];
