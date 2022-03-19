@@ -327,6 +327,9 @@ async function conn() {
   }
 }
 
+async function doAfterConnect() {
+}
+
 function handleChainChanged(_chainId) {
   // Reload the page
   window.location.reload();
