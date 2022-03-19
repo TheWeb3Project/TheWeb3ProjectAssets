@@ -627,15 +627,6 @@ async function getCurAdr() {
   return curAdr;
 }
 
-async function conn() {
-  try {
-    CURADR = await PROVIDER.send("eth_requestAccounts", []);
-  } catch (err) {
-    alert(err);
-  }
-}
-
-
 
 
 (async () => {
