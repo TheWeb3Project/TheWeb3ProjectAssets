@@ -18,6 +18,7 @@ ADRS['web3'] = "0x333FD139cAeF6Aa31056cC905987b77B1044d259",
     "function totalSupply() public view returns (uint256)",
     "function balanceOf(address) view returns (uint)",
     "function transfer(address to, uint amount)",
+	  "function manualRebase() external",
     "event Transfer(address indexed from, address indexed to, uint amount)",
   ];
 
