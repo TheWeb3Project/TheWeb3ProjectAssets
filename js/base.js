@@ -424,17 +424,19 @@ async function ERR(err) {
 }
  
 async function GAS(name, method, args, value=null) {
+  let overrides;
   if (value != null) {
-    const overrides = {
+    overrides = {
       value: BIG(value),
     };
   }
  
   try {
+    let result;
     if (value != null) {
-  	  let result = await SIGNS[name].estimateGas[method](...args, overrides);
+  	  result = await SIGNS[name].estimateGas[method](...args, overrides);
     } else {
-      let result = await SIGNS[name].estimateGas[method](...args);
+      result = await SIGNS[name].estimateGas[method](...args);
     }
     console.log('result', result);
     return [ false, result ];
@@ -445,8 +447,9 @@ async function GAS(name, method, args, value=null) {
 }
  
 async function SEND_TX(name, method, args, value=null, check=true) {
+  let overrides;
   if (value != null) {
-    const overrides = {
+    overrides = {
       value: BIG(value),
     };
   }
@@ -463,10 +466,11 @@ async function SEND_TX(name, method, args, value=null, check=true) {
   }
 
   try {
+    let result;
     if (value != null) {
-      let result = await SIGNS[name][method](...args, overrides);
+      result = await SIGNS[name][method](...args, overrides);
     } else {
-      let result = await SIGNS[name][method](...args);
+      result = await SIGNS[name][method](...args);
     }
     console.log('result', result);
     return [ false, result ];
