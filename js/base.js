@@ -15,10 +15,11 @@ ADRS['web3'] = "0x333FD139cAeF6Aa31056cC905987b77B1044d259",
   ABIS['web3'] = [
     "function name() view returns (string)",
     "function symbol() view returns (string)",
-    "function totalSupply() public view returns (uint256)",
+    "function totalSupply() view returns (uint256)",
     "function balanceOf(address) view returns (uint)",
     "function transfer(address to, uint amount)",
-	  "function manualRebase() external",
+    "function manualRebase()",
+    "function _lastRebaseBlock() view returns (uint256)",
     "event Transfer(address indexed from, address indexed to, uint amount)",
   ];
 
