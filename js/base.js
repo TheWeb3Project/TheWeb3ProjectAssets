@@ -422,7 +422,7 @@ async function ERR(err) {
   return [ false, err ];
 }
  
-async function GAS(name, method, args, value) {
+async function GAS(name, method, args, value=null) {
   if (value != null) {
     const overrides = {
       value: BIG(value),
