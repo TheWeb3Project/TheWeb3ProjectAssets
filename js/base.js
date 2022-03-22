@@ -423,12 +423,18 @@ async function ERR(err) {
 }
  
 async function GAS(name, method, args, value) {
-	const overrides = {
-  	value: BIG(value),
-  };
+  if (value != null) {
+    const overrides = {
+      value: BIG(value),
+    };
+  }
  
   try {
-  	let result = await SIGNS[name].estimateGas[method](...args, overrides);
+    if (value != null) {
+  	  let result = await SIGNS[name].estimateGas[method](...args, overrides);
+    } else {
+      let result = await SIGNS[name].estimateGas[method](...args);
+    }
     console.log('result', result);
     return [ false, result ];
   } catch (err) {
@@ -437,10 +443,12 @@ async function GAS(name, method, args, value) {
   }
 }
  
-async function SEND_TX(name, method, args, value, check=true) {
-	const overrides = {
-  	value: BIG(value),
-  };
+async function SEND_TX(name, method, args, value=null, check=true) {
+  if (value != null) {
+    const overrides = {
+      value: BIG(value),
+    };
+  }
  
   if (check == true) {
   	let { res, data } = await GAS(name, method, args, value);
@@ -454,7 +462,11 @@ async function SEND_TX(name, method, args, value, check=true) {
   }
 
   try {
-    let result = await SIGNS[name][method](...args, overrides);
+    if (value != null) {
+      let result = await SIGNS[name][method](...args, overrides);
+    } else {
+      let result = await SIGNS[name][method](...args);
+    }
     console.log('result', result);
     return [ false, result ];
     /* console.log(tx.hash); */
