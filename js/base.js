@@ -321,7 +321,7 @@ async function handleAccountsChanged(accounts) {
 async function conn() {
 	try {
   	/* CURADR = await PROVIDER.send("eth_requestAccounts", []) */;
-    accounts = await ethereum.request({ method: 'eth_requestAccounts' }); // eth_requestAccounts
+    let accounts = await ethereum.request({ method: 'eth_requestAccounts' }); // eth_requestAccounts
     await handleAccountsChanged(accounts);
     await doAfterConnect();
   } catch (err) {
