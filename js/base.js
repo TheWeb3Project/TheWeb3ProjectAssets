@@ -4,7 +4,12 @@
 
 const BNBDIV = 10**18;
 
-const PROVIDER = new ethers.providers.Web3Provider(window.ethereum);
+let PROVIDER;
+if (window.ethereum) {
+	PROVIDER = new ethers.providers.Web3Provider(window.ethereum);
+} else {
+	PROVIDER = new ethers.providers.Web3Provider(Web3.providers.HttpProvider)
+}
 const SIGNER = PROVIDER.getSigner();
 
 
