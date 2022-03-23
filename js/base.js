@@ -651,18 +651,11 @@ async function getCurAdr() {
 
 
 (async () => {
-	CURADR = await getCurAdr();
-  if (CURADR == null) {
-  	// connect wallet button
-  } else {
-  	// display address
-  }
- 
  
   // do global
  
-  let balance = await getBalance("0x0000000000000000000000000000000000000000");
-  console.log(ETH(balance));
+//   let balance = await getBalance("0x0000000000000000000000000000000000000000");
+//   console.log(ETH(balance));
  
 //   let args;
 //   args = [BIG('1.0'), [ADRS['wbnb'], ADRS['cake']]];
@@ -670,12 +663,19 @@ async function getCurAdr() {
 //   args = [BIG('1.0'), [ADRS['wbnb'], ADRS['cake']], ADRS['cake'], 1000000000000000];
 //   await SEND_TX('router', 'swapExactETHForTokens', args, '1.0');
  
-  if (CURADR == null) {
-  	return;
-  }
+//   CURADR = await getCurAdr();
+//   if (CURADR == null) {
+//   	// connect wallet button
+//   } else {
+//   	// display address
+//   }
+  
+//   if (CURADR == null) {
+//   	return;
+//   }
  
   // do personal
- 
+
  
   console.log('done');
 })();
