@@ -74,7 +74,11 @@ for (let name in ABIS) {
   SIGNS[name] = CONTS[name].connect(SIGNER);
 }
 
+// our token launch time: 2022.03.22 02:30:03 PM UTC
+// https://bscscan.com/tx/0x3745eb92a39460e840aa5503872f7c2fe513f061e8e0e7c59b35fad7841b2896
+const STARTBLOCK = 16282771; 
 
+const CURBLOCK = await PROVIDER.getBlockNumber();
 
 ////////////////////////////////// base
 
@@ -110,6 +114,17 @@ function KEYS(dict) {
 	return Object.keys(dict);
 }
 
+function ADELAY(milSec) {
+  return new Promise(r => setTimeout(r, milSec));
+}
+  
+function DELAY(milSec) {
+  var start = new Date().getTime();
+  var end = 0;
+  while ((end - start) < milSec) {
+    end = new Date().getTime();
+  }
+}
 
 ///////////////////////////////// html
 
