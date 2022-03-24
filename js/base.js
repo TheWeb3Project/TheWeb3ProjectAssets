@@ -7,11 +7,24 @@ const BNBDIV = 10**18;
 let PROVIDER;
 if (window.ethereum) {
 	PROVIDER = new ethers.providers.Web3Provider(window.ethereum);
+	(async function () {
+    network = PROVIDER.getNetwork();
+    if (network['chainId'] != CHAINID) {
+      alert('Network is not BSC. Requesting to change network');
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [{
+          chainId: "0x38",
+          rpcUrls: ["https://bsc-dataseed.binance.org"],
+        }],
+      });
+    }
+  })();
 } else {
-	PROVIDER = new ethers.providers.Web3Provider(Web3.providers.HttpProvider)
+  PROVIDER = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org", {name: 'binance', 'chainId': 56});
 }
 const SIGNER = PROVIDER.getSigner();
-
+const CHAINID = 56;
 
 const ADRS = {};
 const ABIS = {};
