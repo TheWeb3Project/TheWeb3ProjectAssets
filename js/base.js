@@ -3,6 +3,7 @@
 /////////////////////////////////////////////////////////// consts
 
 const BNBDIV = 10**18;
+const CHAINID = 56;
 
 let PROVIDER;
 if (window.ethereum) {
@@ -24,7 +25,7 @@ if (window.ethereum) {
   PROVIDER = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org", {name: 'binance', 'chainId': 56});
 }
 const SIGNER = PROVIDER.getSigner();
-const CHAINID = 56;
+
 
 const ADRS = {};
 const ABIS = {};
