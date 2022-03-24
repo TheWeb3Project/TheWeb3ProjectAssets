@@ -9,7 +9,7 @@ let PROVIDER;
 if (window.ethereum) {
 	PROVIDER = new ethers.providers.Web3Provider(window.ethereum);
 	(async function () {
-    let network = PROVIDER.getNetwork();
+    let network = await PROVIDER.getNetwork();
     if (network['chainId'] != CHAINID) {
       alert('Network is not BSC. Requesting to change network');
       await window.ethereum.request({
