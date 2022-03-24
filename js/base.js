@@ -80,7 +80,10 @@ for (let name in ABIS) {
 // https://bscscan.com/tx/0x3745eb92a39460e840aa5503872f7c2fe513f061e8e0e7c59b35fad7841b2896
 const STARTBLOCK = 16282771; 
 
-const CURBLOCK = await PROVIDER.getBlockNumber();
+let CURBLOCK;
+(async () => {
+	CURBLOCK = await PROVIDER.getBlockNumber();
+})();
 
 ////////////////////////////////// base
 
