@@ -21,6 +21,7 @@ if (window.ethereum) {
       });
     }
   })();
+  
 } else {
   PROVIDER = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org", {name: 'binance', 'chainId': 56});
 }
